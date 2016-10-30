@@ -20,6 +20,7 @@ retrys_number = 3
 username = None
 password = None
 test_topic = None
+arg_message = sys.argv[1]
 
 def pi_gen():
     iteration = 0
@@ -47,10 +48,8 @@ get_connect_try_number = retry_number_gen()
 get_pi_evaluation = pi_gen()
 
 def publish_message(client, topic):
-    iterations, value = next(get_pi_evaluation)
-    message = "Hello through Xively with pi estimation after iteration: " \
-        + str(iterations) + " value: " + value + " and timestamp = " \
-        + str(datetime.now()) + "!!!"
+#    iterations, value = next(get_pi_evaluation)
+    message = arg_message
     client.publish(topic, message, 0, False)
 
 def on_connect_finished(client,result):
@@ -76,8 +75,9 @@ def on_disconnect_finished(client,result):
 
 def on_publish_finished(client,message):
     print("on_publish_finished")
-    time.sleep( 1 )
-    publish_message(client, test_topic)
+    client.disconnect()
+    #time.sleep( 1 )
+    #publish_message(client, test_topic)
 
 def u2a( data ):
     return str( codecs.decode( codecs.encode( data, 'ascii', 'ignore' ), 'ascii', 'ignore' ) )
